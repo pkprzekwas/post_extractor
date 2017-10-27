@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# secret files
+*kascysko*
+
+# pycharm conf
+.idea/
