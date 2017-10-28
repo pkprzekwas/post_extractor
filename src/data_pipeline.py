@@ -1,4 +1,5 @@
 import json
+import logging
 import operator
 from typing import List, Tuple, Callable, Iterable, TextIO
 from collections import OrderedDict
@@ -20,18 +21,23 @@ class DataPipeline(object):
 
     def start(self, lang: str= 'pl'):
         self._files = self.get_files(self._in)
+        logging.info('Reading files \t---> started')
         for file in self._files:
             if file is not None:
                 self._posts.extend(self.get_posts(file))
+        logging.info('Reading files \t---> done')
 
+        logging.info('Translating \t---> started')
         self._posts = self.to_eng(self._posts, lang)
+        logging.info('Translating \t---> done')
         for post in self._posts:
             if post is not None:
                 self._tags.extend(post.tags)
-
         self._results = self.tags_stats(self._tags)
 
+        logging.info('Saving \t\t---> started')
         self.write_all()
+        logging.info('Saving \t\t---> done')
 
     def write_all(self):
         kwargs_list = [
