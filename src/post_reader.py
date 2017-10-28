@@ -10,7 +10,7 @@ class PostReader(object):
 
     @property
     def posts(self) -> List[Post]:
-        return self._read(n=1)
+        return self._read()
 
     def _read(self, n: int=None) -> List[Post]:
         """Return `n` posts in a list. All by default."""

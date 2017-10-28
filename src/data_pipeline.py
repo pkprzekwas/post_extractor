@@ -21,11 +21,13 @@ class DataPipeline(object):
     def start(self, lang: str= 'pl'):
         self._files = self.get_files(self._in)
         for file in self._files:
-            self._posts.extend(self.get_posts(file))
+            if file is not None:
+                self._posts.extend(self.get_posts(file))
 
         self._posts = self.to_eng(self._posts, lang)
         for post in self._posts:
-            self._tags.extend(post.tags)
+            if post is not None:
+                self._tags.extend(post.tags)
 
         self._results = self.tags_stats(self._tags)
 
