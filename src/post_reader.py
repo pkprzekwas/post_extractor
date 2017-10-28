@@ -1,7 +1,7 @@
-from textblob import TextBlob
-from textblob.exceptions import NotTranslated, TranslatorError
+from typing import List
 
 from file_extractor import File
+from post import Post
 
 
 class PostReader(object):
@@ -9,31 +9,13 @@ class PostReader(object):
         self._file = file
 
     @property
-    def posts(self):
-        return self._read(n=2) # n=1 for debugging
+    def posts(self) -> List[Post]:
+        return self._read(n=1)
 
-    def _read(self, n: int=None) -> list:
+    def _read(self, n: int=None) -> List[Post]:
         """Return `n` posts in a list. All by default."""
         file_content = self._file.content_as_json
         posts = [
             Post(text=props.get('content')) for props in file_content
         ]
         return posts[:n]
-
-
-class Post(object):
-    def __init__(self, text: str, author: str=None, data: str=None):
-        self.text = text
-        self.author = author
-        self.data = data
-        self._text_blob = TextBlob(self.text)
-
-    def translate(self, lang: str):
-        try:
-            return self._text_blob.translate(from_lang=lang)
-        except (NotTranslated, TranslatorError) as err:
-            print(err)
-
-    @property
-    def tags(self):
-        return self._text_blob.tags

@@ -102,6 +102,7 @@ ENV/
 
 # secret files
 *kascysko*
+out.txt
 
 # pycharm conf
 .idea/
