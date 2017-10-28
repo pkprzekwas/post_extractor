@@ -10,7 +10,7 @@ class PostReader(object):
 
     @property
     def posts(self):
-        return self._read(n=2)
+        return self._read(n=2) # n=1 for debugging
 
     def _read(self, n: int=None) -> list:
         """Return `n` posts in a list. All by default."""
@@ -22,17 +22,15 @@ class PostReader(object):
 
 
 class Post(object):
-    def __init__(self, text: str, author: str=None,
-                 data: str=None, lang: str ='pl'):
+    def __init__(self, text: str, author: str=None, data: str=None):
         self.text = text
         self.author = author
         self.data = data
-        self._lang = lang
         self._text_blob = TextBlob(self.text)
 
-    def pl_to_en(self):
+    def translate(self, lang: str):
         try:
-            return self._text_blob.translate(from_lang=self._lang)
+            return self._text_blob.translate(from_lang=lang)
         except (NotTranslated, TranslatorError) as err:
             print(err)
 
