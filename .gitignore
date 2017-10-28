@@ -103,6 +103,8 @@ ENV/
 # secret files
 *kascysko*
 out.txt
+posts.txt
+results.json
 
 # pycharm conf
 .idea/
