@@ -7,6 +7,7 @@ from collections import OrderedDict
 from post import Post
 from post_reader import PostReader
 from file_extractor import FileExtractor, File
+from textblob import Sentence
 
 
 class DataPipeline(object):
@@ -18,8 +19,9 @@ class DataPipeline(object):
         self._translated = []
         self._tags = []
         self._results = OrderedDict()
+        self._sentences = []
 
-    def start(self, lang: str= 'pl'):
+    def start(self, lang= 'pl'):
         self._files = self.get_files(self._in)
         logging.info('Reading files \t---> started')
         for file in self._files:
@@ -33,6 +35,7 @@ class DataPipeline(object):
         for post in self._posts:
             if post is not None:
                 self._tags.extend(post.tags)
+                self._sentences.extend(post.sentences)
         self._results = self.tags_stats(self._tags)
 
         logging.info('Saving \t\t---> started')
@@ -52,8 +55,11 @@ class DataPipeline(object):
             dict(
                 file_name='posts.txt',
                 data=self._posts,
-                saver=self.post_saver
-            )
+                saver=self.post_saver),
+            dict(
+                file_name='sentences.txt',
+                data=self._sentences,
+                saver=self.sentence_saver)
         ]
         for kwargs in kwargs_list:
             self.write(**kwargs)
@@ -76,6 +82,11 @@ class DataPipeline(object):
     def post_saver(f: TextIO, posts: List[Post]):
         for post in posts:
             f.write(str(post) + '\n')
+
+    @staticmethod
+    def sentence_saver(f: TextIO, sentences: List[Sentence]):
+        for sentence in sentences:
+            f.write(sentence.string + ' ' + str(sentence.sentiment) +'\n')
 
     @staticmethod
     def to_eng(posts: list, lang: str) -> List[Post]:
@@ -106,4 +117,3 @@ class DataPipeline(object):
         return OrderedDict(
             reversed(sorted(types.items(), key=operator.itemgetter(1)))
         )
-

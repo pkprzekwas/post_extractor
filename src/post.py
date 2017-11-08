@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from textblob import TextBlob
+from textblob import TextBlob, Sentence
 from textblob.exceptions import NotTranslated, TranslatorError
 
 
@@ -10,7 +10,7 @@ class Post(object):
         self.author = author
         self.data = data
         self._text_blob = TextBlob(self.text)
-	
+
     def __str__(self):
         return self.text
 
@@ -26,3 +26,7 @@ class Post(object):
     @property
     def tags(self) -> List[Tuple]:
         return self._text_blob.tags
+
+    @property
+    def sentences(self) -> List[Sentence]:
+        return self._text_blob.sentences
