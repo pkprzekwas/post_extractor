@@ -1,8 +1,0 @@
-1. Integracja ze sparkiem
-2. Dwia dodatkoe zbiory ( analiza syntaktyczna - ilosć zdań / polaryzacja)
-
-3. Zbiór cech elementów:
-	- cechy elementów
-	- cechy strony ? 
-
-4. Dokumentacja - metody przekształcenia wejścia na zbiór cech

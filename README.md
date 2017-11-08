@@ -35,4 +35,14 @@ git clone https://github.com/pkprzekwas/post_extractor.git
 *Pliki wejściowe w formacie json należy umieścić w katalogu `data/in`. Znaleźć je można w katalogu `statement` danych przykładowych znajdujących się na chmurze google.
 
 #### TODO
-Integracja z Apache Spark.
+ - [x] Bazowy interfejs modułu 
+ - [x] Moduł części mowy
+ - [x] Moduł zdań
+ - [x] Moduł analizy polaryzacyjnej
+ - [x] Docker - integracja
+ - [x] Jupyter - integracja
+ - [ ] Testy
+ - [ ] Apache Spark - integracja
+ - [ ] Ekstrakcja cech strony
+ - [ ] Ekstrakcja cechc elementów strony
+
