@@ -12,10 +12,6 @@ class PostReader(object):
     def posts(self) -> List[Post]:
         return self._read()
 
-    def _read(self, n: int=None) -> List[Post]:
-        """Return `n` posts in a list. All by default."""
-        file_content = self._file.content_as_json
-        posts = [
-            Post(text=props.get('content')) for props in file_content
-        ]
-        return posts[:n]
+    def _read(self) -> List[Post]:
+        """Return posts in a JSON format."""
+        return self._file.content_as_json

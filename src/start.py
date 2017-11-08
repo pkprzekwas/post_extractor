@@ -1,15 +1,44 @@
-import logging
+import json
 
-import conf as c
-from data_pipeline import DataPipeline
+from typing import List
+
+import conf
+from data_pipeline import SpeechPartsExtractor
+from file_extractor import File
+from post import Post
+from post_reader import PostReader
+from storage import DataStorageService
+
+
+def get_posts(file):
+    """Return posts in JSON format"""
+    reader = PostReader(file)
+    p = reader.posts
+    return p
+
+
+def extract_posts_from_files(file_list):
+    """Return list of JSON posts"""
+    posts_as_json = []
+    for file in file_list:
+        if file is not None:
+            posts_as_json.extend(get_posts(file))
+    return posts_as_json
+
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        format='%(asctime)s %(message)s',
-        datefmt='%m/%d/%Y %I:%M:%S %p',
-        level=logging.INFO
+
+    configuration = conf.CONFIG
+    storage_service = DataStorageService(configuration)
+
+    files = storage_service.read_all()
+    posts = extract_posts_from_files(files)
+
+    pipeline = SpeechPartsExtractor(lang='eng')
+    parts_of_speech = pipeline.run(posts)
+
+    storage_service.write(
+        file_name='output',
+        data=parts_of_speech,
+        saver=storage_service.tag_saver
     )
-    pipeline = DataPipeline(data_in_path=c.IN, data_out_path=c.OUT)
-    logging.info('Processing starts... (it might take a while)')
-    pipeline.start(lang='pl')
-    logging.info('All done. Check `./data/out/` directory.')

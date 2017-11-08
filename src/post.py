@@ -10,7 +10,7 @@ class Post(object):
         self.author = author
         self.data = data
         self._text_blob = TextBlob(self.text)
-	
+
     def __str__(self):
         return self.text
 
