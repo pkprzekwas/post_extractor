@@ -21,7 +21,7 @@ class DataPipeline(object):
         self._results = OrderedDict()
         self._sentences = []
 
-    def start(self, lang= 'pl'):
+    def start(self, lang: str= 'pl'):
         self._files = self.get_files(self._in)
         logging.info('Reading files \t---> started')
         for file in self._files:
