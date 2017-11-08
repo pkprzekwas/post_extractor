@@ -1,18 +1,16 @@
 import operator
 from collections import OrderedDict
 
-from typing import List, Tuple
-
-from post import Post
+from processing_modules.base_module import BaseModule
 
 
-class SpeechPartsExtractor:
-    def __init__(self, lang: str= 'eng'):
-        super().__init__()
-        self._lang = lang
+class SpeechPartsModule(BaseModule):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-    def run(self, posts):
-        posts_content = [Post(text=props.get('content')) for props in posts]
+    def run(self, input_data):
+        posts = input_data
+        posts_content = self.get_content(posts)
 
         if self._lang != 'eng':
             translated_posts = self.to_eng(posts_content, self._lang)
@@ -23,16 +21,12 @@ class SpeechPartsExtractor:
             if content is not None:
                 tags.extend(content.tags)
 
-        stats = SpeechPartsExtractor.tags_stats(tags)
+        speech_parts = self.tags_sum_by_key(tags)
 
-        return stats
-
-    @staticmethod
-    def to_eng(posts: list, lang: str) -> List[Post]:
-        return [p.translate(lang=lang) for p in posts]
+        return speech_parts
 
     @staticmethod
-    def tags_stats(tags: List[Tuple]) -> OrderedDict:
+    def tags_sum_by_key(tags):
         types = {}
 
         for tag in tags:

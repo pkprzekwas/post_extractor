@@ -1,7 +1,4 @@
-from typing import List
-
-from file_extractor import File
-from post import Post
+from data_access.file_extractor import File
 
 
 class PostReader(object):
@@ -9,9 +6,9 @@ class PostReader(object):
         self._file = file
 
     @property
-    def posts(self) -> List[Post]:
+    def posts(self):
         return self._read()
 
-    def _read(self) -> List[Post]:
+    def _read(self):
         """Return posts in a JSON format."""
         return self._file.content_as_json

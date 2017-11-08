@@ -16,7 +16,10 @@ def logger_conf():
 
 CONFIG = {
     'data_input_directory': dir_ + '/../data/in/',
-    'data_output_directory': dir_ + '/../data/out/'
+    'data_output_directory': dir_ + '/../data/out/',
+    'extracted_speech_parts': 'extracted_speech_parts.json',
+    'extracted_sentences': 'extracted_sentences.json',
+    'extracted_sentiment': 'extracted_sentiment.json'
 }
 
 logger_conf()
