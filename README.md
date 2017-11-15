@@ -34,6 +34,10 @@ git clone https://github.com/pkprzekwas/post_extractor.git
 
 *Pliki wejściowe w formacie json należy umieścić w katalogu `data/in`. Znaleźć je można w katalogu `statement` danych przykładowych znajdujących się na chmurze google.
 
+#### Diagram przetwarzania postów
+
+![posts_processing_diagram](https://github.com/pkprzekwas/post_extractor/blob/master/docs/posts_processing_diagram.png)
+
 #### TODO
  - [x] Bazowy interfejs modułu 
  - [x] Moduł części mowy
@@ -41,8 +45,8 @@ git clone https://github.com/pkprzekwas/post_extractor.git
  - [x] Moduł analizy polaryzacyjnej
  - [x] Docker - integracja
  - [x] Jupyter - integracja
+ - [x] Ekstrakcja cech strony
  - [ ] Testy
  - [ ] Apache Spark - integracja
- - [ ] Ekstrakcja cech strony
  - [ ] Ekstrakcja cechc elementów strony
 
