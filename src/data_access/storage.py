@@ -8,6 +8,7 @@ class DataStorageService:
 
     def __init__(self, conf):
         super().__init__()
+        self.configuration = conf
         self._data_in = conf['data_input_directory']
         self._data_out = conf['data_output_directory']
 
@@ -21,8 +22,28 @@ class DataStorageService:
         with open(file_path, 'w') as f:
             saver(f, data)
 
+    def save_all(self, feature_json):
+        self.write(
+            file_name=self.configuration['extracted_speech_parts'],
+            data=feature_json.get('parts_of_speech'),
+            saver=self.json_saver
+        )
+
+        self.write(
+            file_name=self.configuration['extracted_sentiment'],
+            data=(feature_json.get('sentences_with_sentiments').keys(),
+                  feature_json.get('sentences_with_sentiments').values()),
+            saver=self.sentiment_saver
+        )
+
+        self.write(
+            file_name=self.configuration['extracted_features'],
+            data=feature_json,
+            saver=self.json_saver
+        )
+
     @staticmethod
-    def tag_saver(f, tags):
+    def json_saver(f, tags):
         json.dump(tags, f, indent=4)
 
     @staticmethod

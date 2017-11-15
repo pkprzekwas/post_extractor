@@ -2,16 +2,16 @@ from processing_modules.base_module import BaseModule
 
 
 class SentenceModule(BaseModule):
-    def run(self, input_data):
-        posts = input_data
-        posts_content = self.get_content(posts)
 
-        if self._lang != 'eng':
-            translated_posts = self.to_eng(posts_content, self._lang)
-            posts_content = translated_posts
+    def run(self, input_data):
+        posts = input_data.get('posts')
+
+        if input_data.get('translated') is False:
+            posts = self.translate(posts)
+            input_data.update({'posts': posts, 'translated': True})
 
         sentences = []
-        for content in posts_content:
+        for content in posts:
             if content is not None:
                 sentences.extend(content.sentences)
 

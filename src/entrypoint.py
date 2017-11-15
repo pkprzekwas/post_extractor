@@ -1,11 +1,7 @@
-from functools import partial
-
 import conf
 from data_access.post_reader import PostReader
 from data_access.storage import DataStorageService
-from processing_modules.speech_parts_module import SpeechPartsModule
-from processing_modules.sentence_module import SentenceModule
-from processing_modules.sentiment_module import SentimentModule
+from process import process
 
 
 def get_posts(file):
@@ -32,35 +28,11 @@ if __name__ == '__main__':
     files = storage_service.read_all()
     posts = extract_posts_from_files(files)
 
-    speech_parts = SpeechPartsModule(lang='pl')
-    sentence = SentenceModule(lang='pl')
-    sentiment = SentimentModule(lang='pl')
+    data = {
+        'posts': posts,
+        'translated': False
+    }
 
-    pipeline = [
-        speech_parts.run,
-        sentence.run,
-        sentiment.run
-    ]
+    results = process(data)
 
-    results = []
-
-    for callable_ in pipeline:
-        results.append(callable_(posts))
-
-    storage_service.write(
-        file_name=configuration['extracted_speech_parts'],
-        data=results[0],
-        saver=storage_service.tag_saver
-    )
-
-    storage_service.write(
-        file_name=configuration['extracted_sentences'],
-        data=results[1],
-        saver=storage_service.sentence_saver
-    )
-
-    storage_service.write(
-        file_name=configuration['extracted_sentiment'],
-        data=(results[1], results[2]),
-        saver=storage_service.sentiment_saver
-    )
+    storage_service.save_all(feature_json=results)

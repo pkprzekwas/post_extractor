@@ -19,7 +19,8 @@ CONFIG = {
     'data_output_directory': dir_ + '/../data/out/',
     'extracted_speech_parts': 'extracted_speech_parts.json',
     'extracted_sentences': 'extracted_sentences.json',
-    'extracted_sentiment': 'extracted_sentiment.json'
+    'extracted_sentiment': 'extracted_sentiment.json',
+    'extracted_features': 'extracted_features.json'
 }
 
 logger_conf()
