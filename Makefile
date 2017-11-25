@@ -3,7 +3,7 @@ SUBMIT=/usr/local/spark/bin/spark-submit
 J_HOME=/home/jovyan/work
 
 help:
-	@echo "General helper"
+	@echo "Try to use --> 'make notebook'"
 
 notebook:
 	@docker run -it --rm -v $(DIR):$(J_HOME) -p 8888:8888 jupyter/pyspark-notebook
