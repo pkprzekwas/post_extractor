@@ -1,19 +1,15 @@
-VENV='./.venv'
-ENTRYPOINT='./src/start.py'
+DIR=$(dir $(realpath $(firstword $(MAKEFILE_LIST))))
+SUBMIT=/usr/local/spark/bin/spark-submit
+J_HOME=/home/jovyan/work
+
+help:
+	@echo "General helper"
+
+notebook:
+	@docker run -it --rm -v $(DIR):$(J_HOME) -p 8888:8888 jupyter/pyspark-notebook
 
 run:
-	if [ ! -d $(VENV) ]; then \
-		make init; \
-	fi;
-	.venv/bin/python $(ENTRYPOINT)
-
-init:
-	virtualenv -p python3 .venv
-	.venv/bin/pip install -r requirements.txt
-	.venv/bin/python -m textblob.download_corpora
-
-clean:
-	rm -rf .venv
-	find . -name '*.pyc' -exec rm --force {} +
-	find . -name '*.pyo' -exec rm --force {} +
-	find . -name '*~' -exec rm --force {} +
+	@pip install setuptools wheel virtualenv
+	@pip install textblob.zip
+	@python -m textblob.download_corpora
+	@docker run --rm -it -v $(DIR):/app jupyter/pyspark-notebook $(SUBMIT) /app/run.py
