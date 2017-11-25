@@ -101,7 +101,7 @@ ENV/
 .mypy_cache/
 
 # secret files
-*kascysko*
+# *kascysko*
 out.txt
 posts.txt
 results.json
