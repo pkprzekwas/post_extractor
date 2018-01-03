@@ -1,4 +1,7 @@
 import json
+import statistics
+
+from abc import ABC, abstractmethod
 
 from pyspark import keyword_only
 from pyspark.ml import Transformer
@@ -11,7 +14,7 @@ from pyspark.sql.types import (
 )
 
 
-class FeaturesTransformer(Transformer, HasInputCol, HasOutputCol):
+class BaseFeatureTransformer(Transformer, HasInputCol, HasOutputCol, ABC):
 
     @keyword_only
     def __init__(self, **kwargs):
@@ -30,6 +33,13 @@ class FeaturesTransformer(Transformer, HasInputCol, HasOutputCol):
 
     def get_features(self):
         return self.getOrDefault(self.features)
+
+    @abstractmethod
+    def _transform(self, dataframe):
+        pass
+
+
+class FeaturesTransformer(BaseFeatureTransformer):
 
     def _transform(self, dataframe):
 
@@ -58,6 +68,118 @@ class FeaturesTransformer(Transformer, HasInputCol, HasOutputCol):
             values = []
             for feature in features:
                 values.append(features_dict[feature] / count)
+            return values
+
+        get_cntn = udf(feature_collect, ArrayType(StringType()))
+        return dataframe.withColumn(out_col, get_cntn(in_col))
+
+
+class MeanFeaturesTransformer(BaseFeatureTransformer):
+
+    def _transform(self, dataframe):
+
+        features = self.get_features()
+        out_col = self.getOutputCol()
+        in_col = self.getInputCol()
+
+        def feature_collect(data):
+            features_dict = {}
+            count_dict = {}
+
+            for feature in features:
+                features_dict[feature] = 0
+                count_dict[feature] = 0
+            lines = data.splitlines(keepends=False)
+
+            for line in lines:
+                json_line = json.loads(line)
+                feature_array = json_line.get('features')
+
+                for element in feature_array:
+                    name = element.get('name')
+                    if name in features_dict:
+                        features_dict[name] += element.get('value')
+                        count_dict[name] += 1
+
+            values = []
+            for feature in features:
+                if count_dict[feature] != 0:
+                    values.append(features_dict[feature] / count_dict[feature])
+                else:
+                    values.append(0)
+            return values
+
+        get_cntn = udf(feature_collect, ArrayType(StringType()))
+        return dataframe.withColumn(out_col, get_cntn(in_col))
+
+
+class MedianFeaturesTransformer(BaseFeatureTransformer):
+
+    def _transform(self, dataframe):
+
+        features = self.get_features()
+        out_col = self.getOutputCol()
+        in_col = self.getInputCol()
+
+        def feature_collect(data):
+            features_dict = {}
+            count = 0
+
+            for feature in features:
+                features_dict[feature] = []
+            lines = data.splitlines(keepends=False)
+
+            for line in lines:
+                count += 1
+                json_line = json.loads(line)
+                feature_array = json_line.get('features')
+
+                for element in feature_array:
+                    name = element.get('name')
+                    if name in features_dict:
+                        features_dict[name].append(element.get('value'))
+
+            values = []
+            for feature in features:
+                if not features_dict[feature]:
+                    values.append(0)
+                else:
+                    values.append(statistics.median(features_dict[feature]))
+            return values
+
+        get_cntn = udf(feature_collect, ArrayType(StringType()))
+        return dataframe.withColumn(out_col, get_cntn(in_col))
+
+
+class NumberOfOccurrencesFeaturesTransformer(BaseFeatureTransformer):
+
+    def _transform(self, dataframe):
+
+        features = self.get_features()
+        out_col = self.getOutputCol()
+        in_col = self.getInputCol()
+
+        def feature_collect(data):
+            features_dict = {}
+            count = 0
+
+            for feature in features:
+                features_dict[feature] = 0
+            lines = data.splitlines(keepends=False)
+
+            for line in lines:
+                count += 1
+                json_line = json.loads(line)
+                feature_array = json_line.get('features')
+
+                for element in feature_array:
+                    name = element.get('name')
+                    if name in features_dict:
+                        features_dict[name] += 1
+
+            values = []
+            for feature in features:
+                values.append(features_dict[feature])
             return values
 
         get_cntn = udf(feature_collect, ArrayType(StringType()))
