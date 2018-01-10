@@ -39,7 +39,7 @@ class BaseFeatureTransformer(Transformer, HasInputCol, HasOutputCol, ABC):
         pass
 
 
-class FeaturesTransformer(BaseFeatureTransformer):
+class MaxFeaturesTransformer(BaseFeatureTransformer):
 
     def _transform(self, dataframe):
 
@@ -49,25 +49,23 @@ class FeaturesTransformer(BaseFeatureTransformer):
 
         def feature_collect(data):
             features_dict = {}
-            count = 0
 
             for feature in features:
                 features_dict[feature] = 0
             lines = data.splitlines(keepends=False)
 
             for line in lines:
-                count += 1
                 json_line = json.loads(line)
                 feature_array = json_line.get('features')
 
                 for element in feature_array:
                     name = element.get('name')
                     if name in features_dict:
-                        features_dict[name] += element.get('value')
+                        features_dict[name] = max(features_dict[name],element.get('value'))
 
             values = []
             for feature in features:
-                values.append(features_dict[feature] / count)
+                values.append(features_dict[feature])
             return values
 
         get_cntn = udf(feature_collect, ArrayType(StringType()))
