@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import statistics
 
@@ -40,7 +41,14 @@ class BaseFeatureTransformer(Transformer, HasInputCol, HasOutputCol, ABC):
 
 
 class MaxFeaturesTransformer(BaseFeatureTransformer):
-
+    """
+    Klasa MaxFeaturesTransformer dziedziczy  po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Klasa ta przyjmuje dodatkowy parametr features, który zawiera listę nazw cech,
+    które mają zostać zagregowane. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda
+    ta wylicza średnie wartości dla cech podanych w parametrze features, ze wszystkich obiektów jsonowych znajdujących
+    się w tekście zawartym w kolumnie inputCol. Wyliczone wartości wstawia do kolumny outputCol w postaci listy
+    double’i.
+    """
     def _transform(self, dataframe):
 
         features = self.get_features()
@@ -73,7 +81,14 @@ class MaxFeaturesTransformer(BaseFeatureTransformer):
 
 
 class MeanFeaturesTransformer(BaseFeatureTransformer):
-
+    """
+    Klasa MeanFeaturesTransformer dziedziczy  po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Klasa ta przyjmuje dodatkowy parametr features, który zawiera listę nazw cech,
+    które mają zostać zagregowane. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda
+    ta wylicza średnie wartości dla cech podanych w parametrze features, ze wszystkich obiektów jsonowych znajdujących
+    się w tekście zawartym w kolumnie inputCol. Wyliczone wartości wstawia do kolumny outputCol w postaci listy
+    double’i.
+    """
     def _transform(self, dataframe):
 
         features = self.get_features()
@@ -112,7 +127,13 @@ class MeanFeaturesTransformer(BaseFeatureTransformer):
 
 
 class MedianFeaturesTransformer(BaseFeatureTransformer):
-
+    """
+    Klasa MedianFeaturesTransformer dziedziczy  po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Klasa ta przyjmuje dodatkowy parametr features, który zawiera listę nazw cech,
+    które mają zostać zagregowane. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda
+    ta wylicza medianę dla cech podanych w parametrze features, ze wszystkich obiektów jsonowych znajdujących się
+    w tekście zawartym w kolumnie inputCol. Wyliczone wartości wstawia do kolumny outputCol w postaci listy double’i.
+    """
     def _transform(self, dataframe):
 
         features = self.get_features()
@@ -150,7 +171,13 @@ class MedianFeaturesTransformer(BaseFeatureTransformer):
 
 
 class NumberOfOccurrencesFeaturesTransformer(BaseFeatureTransformer):
-
+    """
+    Klasa MedianFeaturesTransformer dziedziczy  po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Klasa ta przyjmuje dodatkowy parametr features, który zawiera listę nazw cech,
+    które mają zostać zagregowane. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda
+    ta wylicza medianę dla cech podanych w parametrze features, ze wszystkich obiektów jsonowych znajdujących się
+    w tekście zawartym w kolumnie inputCol. Wyliczone wartości wstawia do kolumny outputCol w postaci listy double’i.
+    """
     def _transform(self, dataframe):
 
         features = self.get_features()
