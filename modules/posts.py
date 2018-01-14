@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import ast
 
@@ -11,6 +12,11 @@ from pyspark.sql.types import ArrayType, StringType, MapType, IntegerType, Struc
 
 
 class PostTransformer(Transformer, HasInputCol, HasOutputCol):
+    """
+    Klasa PostTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe.
+    Metoda ta wydobywa z kolumny inputCol, z formatu json, content i umieszcza go w kolumnie outputCol w postaci tekstu.
+    """
     def __init__(self):
         super().__init__()
 
@@ -27,6 +33,12 @@ class PostTransformer(Transformer, HasInputCol, HasOutputCol):
 
 
 class TranslateTransformer(Transformer, HasInputCol, HasOutputCol):
+    """
+    Klasa TranslateTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe.
+    Metoda ta tłumaczy tekst zawarty w kolumnie inputCol  z języka polskiego na angielski i umieszcza go w kolumnie
+    outputCol.
+    """
     def __init__(self):
         super().__init__()
 
@@ -49,6 +61,12 @@ class TranslateTransformer(Transformer, HasInputCol, HasOutputCol):
 
 
 class SentenceTransformer(Transformer, HasInputCol, HasOutputCol):
+    """
+    Klasa SentenceTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe.
+    Metoda ta dzieli tekst zawarty w kolumnie inputCol  na zdania i umieszcza go w kolumnie outputCol w postaci
+    tablicy tekstów.
+    """
     def __init__(self):
         super().__init__()
 
@@ -67,6 +85,12 @@ class SentenceTransformer(Transformer, HasInputCol, HasOutputCol):
         return dataframe.withColumn(out_col, ext_sentn(in_col))
 
 class SpeechPartsTransformer(Transformer, HasInputCol, HasOutputCol):
+    """
+    Klasa SpeechPartsTransformer dziedziczy  po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe.
+    Metoda ta z tekstu zawartego w kolumnie inputCol  zlicza wystąpienie części mowy i wstawia do outputCol w postaci
+    jsona.
+    """
     def __init__(self):
         super().__init__()
 
@@ -96,6 +120,11 @@ class SpeechPartsTransformer(Transformer, HasInputCol, HasOutputCol):
         return dataframe.withColumn(out_col, ext_speech_parts(in_col))
 
 class SentimentTransformer(Transformer, HasInputCol, HasOutputCol):
+    """
+    Klasa SentimentTransformer dziedziczy  po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    pyspark.ml.param.shared.HasOutputCol. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe.
+    Metoda ta z tekstu zawartego w kolumnie inputCol  wylicza sentiment i wstawia do kolumny outputCol.
+    """
     def __init__(self):
         super().__init__()
 
