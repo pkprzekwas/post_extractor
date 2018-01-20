@@ -20,8 +20,6 @@ Komenda startuje kontener dockerowy z Jupyterem i podmontowuje katalog projektu.
 Moduły znajdują się w katalogu `modules` i tam też będą lądowały kolejne.
 Uruchomienie póki co możliwe jest tylko z poziomu notebook'a.
 
-[comment - nieaktualny dokument]: <> (+ Dokumentacja google [Google Docs](https://docs.google.com/document/d/1IylTvJbRe8s_j_bZqbM-6nWVa2IQDjQiZx-NyJsGZbg))
-
 ## Moduły
 
 
