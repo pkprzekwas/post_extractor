@@ -71,10 +71,13 @@ Klasa NumberOfOccurrencesTransformer dziedziczy po klasach pyspark.ml.Transforme
 pyspark.ml.param.shared.HasOutputCol. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda
 ta wylicza długość listy wartości, dla wszystkich kluczy znajdujących się w słowniku zawartym w kolumnie inputCol. Wyliczone wartości wstawia do kolumny outputCol w postaci słownika klucz - liczba elementów listy wartości.
 
-##### ConvertDictToListTransformer
-Klasa ConvertDictToListTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+##### ConvertDictToVectorTransformer
+Klasa ConvertDictToVectorTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
 pyspark.ml.param.shared.HasOutputCol. Klasa ta przyjmuje dodatkowe parametry: keys, który zawiera listę nazw kluczy,
-które mają zostać skonwertowane w podanej kolejności do formatu listy oraz element_type, który określa typ elementu słownika. Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda ta wydobywa zawartość z kolumny inputCol, w formacie słownika i umieszcza go w kolumnie outputCol w postaci listy wartości kluczy podanych w parametrze. W przypadku braku istnienia danego klucza w słowniku, zwracana wartość będzie równa None.
+które mają zostać skonwertowane w podanej kolejności do formatu wektora oraz element_type, który określa typ elementu słownika.
+Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda ta wydobywa zawartość z kolumny inputCol, w
+formacie słownika i umieszcza go w kolumnie outputCol w postaci wektora wartości kluczy podanych w parametrze. W przypadku braku
+istnienia danego klucza w słowniku, zwracana wartość będzie równa None.
 
 ##### SelectRecordsTransformer
 Klasa SelectRecordsTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,

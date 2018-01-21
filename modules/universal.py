@@ -9,27 +9,26 @@ from textblob.exceptions import NotTranslated, TranslatorError
 
 from pyspark import keyword_only
 from pyspark.ml import Transformer
+from pyspark.ml.linalg import Vectors, VectorUDT
 from pyspark.ml.param.shared import HasInputCol, HasOutputCol, Param
 from pyspark.sql.functions import udf
 from pyspark.sql.types import ArrayType, DoubleType, StringType, MapType, IntegerType
 
 
-class ConvertDictToListTransformer(Transformer, HasInputCol, HasOutputCol):
+class ConvertDictToVectorTransformer(Transformer, HasInputCol, HasOutputCol):
     """
-    Klasa ConvertDictToListTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
+    Klasa ConvertDictToVectorTransformer dziedziczy po klasach pyspark.ml.Transformer, pyspark.ml.param.shared.HasInputCol,
     pyspark.ml.param.shared.HasOutputCol. Klasa ta przyjmuje dodatkowe parametry: keys, który zawiera listę nazw kluczy,
-    które mają zostać skonwertowane w podanej kolejności do formatu listy oraz element_type, który określa typ elementu słownika.
+    które mają zostać skonwertowane w podanej kolejności do formatu wektora oraz element_type, który określa typ elementu słownika.
     Posiada metodę transform, która przyjmuje na wejściu obiekt typu dataframe. Metoda ta wydobywa zawartość z kolumny inputCol, w
-    formacie słownika i umieszcza go w kolumnie outputCol w postaci listy wartości kluczy podanych w parametrze. W przypadku braku
+    formacie słownika i umieszcza go w kolumnie outputCol w postaci wektora wartości kluczy podanych w parametrze. W przypadku braku
     istnienia danego klucza w słowniku, zwracana wartość będzie równa None.
     """
     @keyword_only
     def __init__(self, **kwargs):
         super().__init__()
         self.keys = Param(self, "keys", "")
-        self.element_type = Param(self, "element_type", "")
         self._setDefault(keys=set())
-        self._setDefault(element_type=set())
         self.set_params(**self._input_kwargs)
 
     @keyword_only
@@ -41,18 +40,10 @@ class ConvertDictToListTransformer(Transformer, HasInputCol, HasOutputCol):
         return self
 
     def get_keys(self):
-        return self.getOrDefault(self.keys)
-    
-    def set_element_type(self, value):
-        self._paramMap[self.element_type] = value
-        return self
-
-    def get_element_type(self):
-        return self.getOrDefault(self.element_type)    
+        return self.getOrDefault(self.keys) 
         
     def _transform(self, dataframe):
         keys_to_filter = self.get_keys()
-        element_type = self.get_element_type()
         out_col = self.getOutputCol()
         in_col = self.getInputCol()
 
@@ -63,9 +54,9 @@ class ConvertDictToListTransformer(Transformer, HasInputCol, HasOutputCol):
                     selected_records.append(dictionary[key])
                 else:
                     selected_records.append(None)
-            return selected_records
+            return Vectors.dense(selected_records)
 
-        get_selected_records = udf(select_records, ArrayType(element_type))
+        get_selected_records = udf(select_records, VectorUDT())
         return dataframe.withColumn(out_col, get_selected_records(in_col))
 
 class SelectRecordsTransformer(Transformer, HasInputCol, HasOutputCol):
